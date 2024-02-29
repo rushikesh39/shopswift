@@ -14,17 +14,36 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Allow Voice to Text Tutorial to access the microphone",
+          "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
+        }
+      ]
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.host.exponent",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "ios": {
       "bundleIdentifier": "com.host.exponent"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "526fd7b7-6251-43af-9f04-9e1e24513530"
+      }
+    },
+    "owner": "rushikes39"
   }
 }

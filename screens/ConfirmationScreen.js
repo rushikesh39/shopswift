@@ -7,9 +7,13 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { cleanCart } from "../redux/CartReducer";
 import { useNavigation } from "@react-navigation/native";
+// import RazorpayCheckout from "react-native-razorpay";
 import RazorpayCheckout from "react-native-razorpay";
 
 const ConfirmationScreen = () => {
+  const Data = RazorpayCheckout;
+  
+  console.log("razor pay",Data)
   const steps = [
     { title: "Address", content: "Address Form" },
     { title: "Delivery", content: "Delivery Options" },
@@ -30,7 +34,7 @@ const ConfirmationScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `https://ecommerce-app-server-ivo6.onrender.com/addresses/${userId}`
       );
       const { addresses } = response.data;
 
@@ -54,7 +58,7 @@ const ConfirmationScreen = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/orders",
+        "https://ecommerce-app-server-ivo6.onrender.com/orders",
         orderData
       );
       if (response.status === 200) {
@@ -70,21 +74,22 @@ const ConfirmationScreen = () => {
   };
   const pay = async () => {
     try {
-      const options = {
+      var options = {
         description: "Adding To Wallet",
         currency: "INR",
-        name: "Amazon",
-        key: "rzp_test_E3GWYimxN7YMk8",
+        name: "ShopSwift",
+        key: "rzp_test_dnI8wdj6dz7PJs",
         amount: total * 100,
         prefill: {
-          email: "void@razorpay.com",
-          contact: "9191919191",
+          email: "yourmail@gmail.com",
+          contact: "8888888888",
           name: "RazorPay Software",
         },
         theme: { color: "#F37254" },
       };
 
       const data = await RazorpayCheckout.open(options);
+      // const data =await RazorpayCheckout
 
       console.log(data)
 
@@ -97,7 +102,7 @@ const ConfirmationScreen = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/orders",
+        "https://ecommerce-app-server-ivo6.onrender.com/orders",
         orderData
       );
       if (response.status === 200) {

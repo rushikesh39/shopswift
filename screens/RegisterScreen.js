@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,8 +9,8 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,17 +21,41 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false); // New state for loading
   const navigation = useNavigation();
+
   const handleRegister = () => {
+    // Basic validation
+  if (!name.trim()) {
+    Alert.alert("Please enter your name");
+    return;
+  }
+
+  // Enhanced email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.trim()) {
+    Alert.alert("Please enter your email");
+    return;
+  } else if (!emailRegex.test(email)) {
+    Alert.alert("Please enter a valid email address");
+    return;
+  }
+
+  if (!password.trim()) {
+    Alert.alert("Please enter your password");
+    return;
+  }
+
+    setLoading(true); // Set loading to true when registration starts
+
     const user = {
       name: name,
       email: email,
       password: password,
     };
 
-    // send a POST  request to the backend API to register the user
     axios
-      .post("http://localhost:8000/register", user)
+      .post("https://ecommerce-app-server-ivo6.onrender.com/register", user)
       .then((response) => {
         console.log(response);
         Alert.alert(
@@ -47,17 +72,21 @@ const RegisterScreen = () => {
           "An error occurred while registering"
         );
         console.log("registration failed", error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false when registration completes (whether success or failure)
       });
   };
+
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50  }}
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center", marginTop: 50 }}
     >
       <View>
         <Image
           style={{ width: 150, height: 100 }}
           source={{
-            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
+            uri: "https://www.360webdesigns.com/wp-content/uploads/2016/07/Services_ECommerce_v2-01.png",
           }}
         />
       </View>
@@ -199,18 +228,24 @@ const RegisterScreen = () => {
             marginLeft: "auto",
             marginRight: "auto",
             padding: 15,
+            opacity: loading ? 0.7 : 1, // Decrease opacity when loading
           }}
+          disabled={loading} // Disable button when loading
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "white",
-              fontSize: 16,
-              fontWeight: "bold",
-            }}
-          >
-            Register
-          </Text>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </Text>
+          )}
         </Pressable>
 
         <Pressable

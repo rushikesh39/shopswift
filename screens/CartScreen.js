@@ -63,7 +63,7 @@ const CartScreen = () => {
             size={22}
             color="black"
           />
-          <TextInput placeholder="Search Amazon.in" />
+          <TextInput placeholder="Search " />
         </Pressable>
 
         <Feather name="mic" size={24} color="black" />

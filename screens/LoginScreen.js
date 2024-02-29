@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,8 +8,9 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import React, { useState,useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +20,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // New state for loading
   const navigation = useNavigation();
+
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -33,14 +37,17 @@ const LoginScreen = () => {
     };
     checkLoginStatus();
   }, []);
+
   const handleLogin = () => {
+    setLoading(true); // Set loading to true when login starts
+
     const user = {
       email: email,
       password: password,
     };
 
     axios
-      .post("http://localhost:8000/login", user)
+      .post("https://ecommerce-app-server-ivo6.onrender.com/login", user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;
@@ -50,17 +57,21 @@ const LoginScreen = () => {
       .catch((error) => {
         Alert.alert("Login Error", "Invalid Email");
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false when login completes (whether success or failure)
       });
   };
+
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50 }}
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center", marginTop: 50 }}
     >
       <View>
         <Image
           style={{ width: 150, height: 100 }}
           source={{
-            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
+            uri: "https://www.360webdesigns.com/wp-content/uploads/2016/07/Services_ECommerce_v2-01.png",
           }}
         />
       </View>
@@ -172,18 +183,17 @@ const LoginScreen = () => {
             marginLeft: "auto",
             marginRight: "auto",
             padding: 15,
+            opacity: loading ? 0.7 : 1, // Decrease opacity when loading
           }}
+          disabled={loading} // Disable button when loading
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "white",
-              fontSize: 16,
-              fontWeight: "bold",
-            }}
-          >
-            Login
-          </Text>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={{ textAlign: "center", color: "white", fontSize: 16, fontWeight: "bold" }}>
+              Login
+            </Text>
+          )}
         </Pressable>
 
         <Pressable

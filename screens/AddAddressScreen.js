@@ -25,7 +25,7 @@ const AddAddressScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `https://ecommerce-app-server-ivo6.onrender.com/addresses/${userId}`
       );
       const { addresses } = response.data;
 
@@ -69,7 +69,7 @@ const AddAddressScreen = () => {
             size={22}
             color="black"
           />
-          <TextInput placeholder="Search Amazon.in" />
+          <TextInput placeholder="Search" />
         </Pressable>
 
         <Feather name="mic" size={24} color="black" />

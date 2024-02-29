@@ -63,7 +63,7 @@ const ProductInfoScreen = () => {
             size={22}
             color="black"
           />
-          <TextInput placeholder="Search Amazon.in" />
+          <TextInput placeholder="Search " />
         </Pressable>
 
         <Feather name="mic" size={24} color="black" />
@@ -72,7 +72,7 @@ const ProductInfoScreen = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {route.params.carouselImages.map((item, index) => (
           <ImageBackground
-            style={{ width, height, marginTop: 25, resizeMode: "contain" }}
+            style={{ width, height, marginTop: 25, resizeMode: "cover" }}
             source={{ uri: item }}
             key={index}
           >

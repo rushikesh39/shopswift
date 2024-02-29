@@ -8,6 +8,8 @@ import {
   Pressable,
   TextInput,
   Image,
+  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
@@ -27,40 +29,54 @@ import { UserType } from "../UserContext";
 import jwt_decode from "jwt-decode";
 
 const HomeScreen = () => {
+  
+  const navi = useNavigation();
+
   const list = [
     {
       id: "0",
-      image: "https://m.media-amazon.com/images/I/41EcYoIZhIL._AC_SY400_.jpg",
-      name: "Home",
+      image: "https://www.bhphotovideo.com/images/images2000x2000/amazon_b07f6vm1s3_echo_buds_1512892.jpg",
+      name: "Earbuds",
+      category:"Earbuds",
     },
     {
       id: "1",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/blockbuster.jpg",
-      name: "Deals",
+      image:"https://images-na.ssl-images-amazon.com/images/I/615XvGy0XZL._AC_SL1500_.jpg",
+      name: "Smart Watch",
+      category:"Smart Watch",
     },
     {
       id: "3",
       image:
         "https://images-eu.ssl-images-amazon.com/images/I/31dXEvtxidL._AC_SX368_.jpg",
-      name: "Electronics",
+      name: "Headphone",
+      category:"Headphone",
     },
     {
       id: "4",
       image:
         "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/All_Icons_Template_1_icons_01.jpg",
       name: "Mobiles",
+      category: "Mobile",
     },
     {
-      id: "5",
+      id: "8",
       image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/music.jpg",
-      name: "Music",
+        "https://m.media-amazon.com/images/I/91R5dLzX8QL._SX679_.jpg",
+      name: "Electronics",
+      category: "electronics",
     },
     {
       id: "6",
       image: "https://m.media-amazon.com/images/I/51dZ19miAbL._AC_SY350_.jpg",
       name: "Fashion",
+      category:"women's clothing"
+    },
+    {
+      id: "7",
+      image: "https://images-na.ssl-images-amazon.com/images/G/01/AMAZON_FASHION/2017/EDITORIAL/SPRING_2/MEN/CLOTHING/SPRING2_M_Clothing_VD_Set1_3._V534219377_.jpg",
+      name: "Fashion",
+      category:"men's clothing"
     },
   ];
   const images = [
@@ -68,160 +84,46 @@ const HomeScreen = () => {
     "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/devjyoti/PD23/Launches/Updated_ingress1242x550_3.gif",
     "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Books/BB/JULY/1242x550_Header-BB-Jul23.jpg",
   ];
-  const deals = [
-    {
-      id: "20",
-      title: "OnePlus Nord CE 3 Lite 5G (Pastel Lime, 8GB RAM, 128GB Storage)",
-      oldPrice: 25000,
-      price: 19000,
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/G/31/wireless_products/ssserene/weblab_wf/xcm_banners_2022_in_bau_wireless_dec_580x800_once3l_v2_580x800_in-en.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/61QRgOgBx0L._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61uaJPLIdML._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/510YZx4v3wL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61J6s1tkwpL._SX679_.jpg",
-      ],
-      color: "Stellar Green",
-      size: "6 GB RAM 128GB Storage",
-    },
-    {
-      id: "30",
-      title:
-        "Samsung Galaxy S20 FE 5G (Cloud Navy, 8GB RAM, 128GB Storage) with No Cost EMI & Additional Exchange Offers",
-      oldPrice: 74000,
-      price: 26000,
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Wireless/Samsung/SamsungBAU/S20FE/GW/June23/BAU-27thJune/xcm_banners_2022_in_bau_wireless_dec_s20fe-rv51_580x800_in-en.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/81vDZyJQ-4L._SY879_.jpg",
-        "https://m.media-amazon.com/images/I/61vN1isnThL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71yzyH-ohgL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61vN1isnThL._SX679_.jpg",
-      ],
-      color: "Cloud Navy",
-      size: "8 GB RAM 128GB Storage",
-    },
-    {
-      id: "40",
-      title:
-        "Samsung Galaxy M14 5G (ICY Silver, 4GB, 128GB Storage) | 50MP Triple Cam | 6000 mAh Battery | 5nm Octa-Core Processor | Android 13 | Without Charger",
-      oldPrice: 16000,
-      price: 14000,
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Wireless/Samsung/CatPage/Tiles/June/xcm_banners_m14_5g_rv1_580x800_in-en.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/817WWpaFo1L._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/81KkF-GngHL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61IrdBaOhbL._SX679_.jpg",
-      ],
-      color: "Icy Silver",
-      size: "6 GB RAM 64GB Storage",
-    },
-    {
-      id: "40",
-      title:
-        "realme narzo N55 (Prime Blue, 4GB+64GB) 33W Segment Fastest Charging | Super High-res 64MP Primary AI Camera",
-      oldPrice: 12999,
-      price: 10999,
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/G/31/tiyesum/N55/June/xcm_banners_2022_in_bau_wireless_dec_580x800_v1-n55-marchv2-mayv3-v4_580x800_in-en.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/41Iyj5moShL._SX300_SY300_QL70_FMwebp_.jpg",
-        "https://m.media-amazon.com/images/I/61og60CnGlL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61twx1OjYdL._SX679_.jpg",
-      ],
-    },
-  ];
-  const offers = [
-    {
-      id: "0",
-      title:
-        "Oppo Enco Air3 Pro True Wireless in Ear Earbuds with Industry First Composite Bamboo Fiber, 49dB ANC, 30H Playtime, 47ms Ultra Low Latency,Fast Charge,BT 5.3 (Green)",
-      offer: "72% off",
-      oldPrice: 7500,
-      price: 4500,
-      image:
-        "https://m.media-amazon.com/images/I/61a2y1FCAJL._AC_UL640_FMwebp_QL65_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/61a2y1FCAJL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71DOcYgHWFL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71LhLZGHrlL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61Rgefy4ndL._SX679_.jpg",
-      ],
-      color: "Green",
-      size: "Normal",
-    },
-    {
-      id: "1",
-      title:
-        "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
-      oldPrice: 7955,
-      price: 3495,
-      image: "https://m.media-amazon.com/images/I/41mQKmbkVWL._AC_SY400_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/71h2K2OQSIL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71BlkyWYupL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71c1tSIZxhL._SX679_.jpg",
-      ],
-      color: "black",
-      size: "Normal",
-    },
-    {
-      id: "2",
-      title: "Aishwariya System On Ear Wireless On Ear Bluetooth Headphones",
-      offer: "40%",
-      oldPrice: 7955,
-      price: 3495,
-      image: "https://m.media-amazon.com/images/I/41t7Wa+kxPL._AC_SY400_.jpg",
-      carouselImages: ["https://m.media-amazon.com/images/I/41t7Wa+kxPL.jpg"],
-      color: "black",
-      size: "Normal",
-    },
-    {
-      id: "3",
-      title:
-        "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
-      oldPrice: 24999,
-      price: 19999,
-      image: "https://m.media-amazon.com/images/I/71k3gOik46L._AC_SY400_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/41bLD50sZSL._SX300_SY300_QL70_FMwebp_.jpg",
-        "https://m.media-amazon.com/images/I/616pTr2KJEL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71wSGO0CwQL._SX679_.jpg",
-      ],
-      color: "Norway Blue",
-      size: "8GB RAM, 128GB Storage",
-    },
-  ];
+  
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [category, setCategory] = useState("jewelery");
   const { userId, setUserId } = useContext(UserType);
-  const [selectedAddress,setSelectedAdress] = useState("");
-  console.log(selectedAddress)
+  const [selectedAddress, setSelectedAdress] = useState("");
+  console.log(selectedAddress);
   const [items, setItems] = useState([
     { label: "Men's clothing", value: "men's clothing" },
     { label: "jewelery", value: "jewelery" },
     { label: "electronics", value: "electronics" },
     { label: "women's clothing", value: "women's clothing" },
   ]);
+
+  const [loading, setLoading] = useState(true);
+  const [apiProducts, setApiProducts] = useState([]);
+
+  // loading products from api
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://fakestoreapi.com/products");
+        const response = await axios.get(
+          "https://ecommerce-app-server-ivo6.onrender.com/api/products"
+        );
+        setApiProducts(response.data);
         setProducts(response.data);
+        setLoading(false);
       } catch (error) {
-        console.log("error message", error);
+        console.log("Error fetching data", error);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  
   const onGenderOpen = useCallback(() => {
     setCompanyOpen(false);
   }, []);
@@ -236,7 +138,7 @@ const HomeScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `https://ecommerce-app-server-ivo6.onrender.com/addresses/${userId}`
       );
       const { addresses } = response.data;
 
@@ -255,271 +157,332 @@ const HomeScreen = () => {
 
     fetchUser();
   }, []);
-  console.log("address", addresses);
+
+  //  filter deals of the week
+  const filteredProducts = apiProducts.filter(
+    (product) =>
+      // product.title.toLowerCase().includes(search.toLowerCase())
+      product.subCategory === "deal of the week"
+  );
+  const Todaysdeal = apiProducts.filter(
+    (product) =>
+      // product.title.toLowerCase().includes(search.toLowerCase())
+      product.subCategory === "deal of the day"
+  );
+
+  const handleSearch = () => {
+    if (!search == "") {
+      navi.navigate("SearchResults", { search });
+    }
+  };
+
   return (
-    <>
-      <SafeAreaView
+   <>
+      <View
         style={{
-          paddinTop: Platform.OS === "android" ? 40 : 0,
+          paddingTop: Platform.OS === "android" ? 40 : 0,
           flex: 1,
           backgroundColor: "white",
         }}
       >
-        <ScrollView>
+        {loading ? (
           <View
-            style={{
-              backgroundColor: "#00CED1",
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" , height:'100%'}}
           >
+            <ActivityIndicator size="large" color="#00CED1" />
+          </View>
+        ) : (
+          <ScrollView>
+            <View
+              style={{
+                backgroundColor: "#00CED1",
+                padding: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Pressable
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginHorizontal: 7,
+                  gap: 10,
+                  backgroundColor: "white",
+                  borderRadius: 3,
+                  height: 38,
+                  flex: 1,
+                }}
+              >
+                <TextInput
+                  style={{
+                    width: "75%",
+                    marginLeft: 15,
+                    paddingVertical: 0,
+                  }}
+                  value={search}
+                  onChangeText={(text) => setSearch(text)}
+                  placeholder="Search..."
+                />
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: 5,
+                  }}
+                  onPress={handleSearch}
+                >
+                  <AntDesign
+                    style={{ paddingLeft: 10 }}
+                    name="search1"
+                    size={22}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </Pressable>
+
+              <TouchableOpacity
+                onPress={() => {
+                  navi.navigate("VoiceSearch");
+                }}
+              >
+                <Feather name="mic" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+
             <Pressable
+              onPress={() => setModalVisible(!modalVisible)}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginHorizontal: 7,
-                gap: 10,
-                backgroundColor: "white",
-                borderRadius: 3,
-                height: 38,
-                flex: 1,
+                gap: 5,
+                padding: 10,
+                backgroundColor: "#AFEEEE",
               }}
             >
-              <AntDesign
-                style={{ paddingLeft: 10 }}
-                name="search1"
-                size={22}
+              <Ionicons name="location-outline" size={24} color="black" />
+
+              <Pressable>
+                {selectedAddress ? (
+                  <Text>
+                    Deliver to {selectedAddress?.name} -{" "}
+                    {selectedAddress?.street}
+                  </Text>
+                ) : (
+                  <Text style={{ fontSize: 13, fontWeight: "500" }}>
+                    Add a Address
+                  </Text>
+                )}
+              </Pressable>
+
+              <MaterialIcons
+                name="keyboard-arrow-down"
+                size={24}
                 color="black"
               />
-              <TextInput placeholder="Search Amazon.in" />
             </Pressable>
 
-            <Feather name="mic" size={24} color="black" />
-          </View>
-
-          <Pressable
-            onPress={() => setModalVisible(!modalVisible)}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              padding: 10,
-              backgroundColor: "#AFEEEE",
-            }}
-          >
-            <Ionicons name="location-outline" size={24} color="black" />
-
-            <Pressable>
-            {selectedAddress ? (
-                <Text>
-                  Deliver to {selectedAddress?.name} - {selectedAddress?.street}
-                </Text>
-              ) : (
-                <Text style={{ fontSize: 13, fontWeight: "500" }}>
-                    Add a Address
-                </Text>
-              )}
-            </Pressable>
-
-            <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
-          </Pressable>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {list.map((item, index) => (
-              <Pressable
-                key={index}
-                style={{
-                  margin: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  style={{ width: 50, height: 50, resizeMode: "contain" }}
-                  source={{ uri: item.image }}
-                />
-
-                <Text
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {list.map((item, index) => (
+                <Pressable
+                  key={index}
                   style={{
-                    textAlign: "center",
-                    fontSize: 12,
-                    fontWeight: "500",
-                    marginTop: 5,
-                  }}
-                >
-                  {item?.name}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-
-          <SliderBox
-            images={images}
-            autoPlay
-            circleLoop
-            dotColor={"#13274F"}
-            inactiveDotColor="#90A4AE"
-            ImageComponentStyle={{ width: "100%" }}
-          />
-
-          <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
-            Trending Deals of the week
-          </Text>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {deals.map((item, index) => (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("Info", {
-                    id: item.id,
-                    title: item.title,
-                    price: item?.price,
-                    carouselImages: item.carouselImages,
-                    color: item?.color,
-                    size: item?.size,
-                    oldPrice: item?.oldPrice,
-                    item: item,
-                  })
-                }
-                style={{
-                  marginVertical: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  style={{ width: 180, height: 180, resizeMode: "contain" }}
-                  source={{ uri: item?.image }}
-                />
-              </Pressable>
-            ))}
-          </View>
-
-          <Text
-            style={{
-              height: 1,
-              borderColor: "#D0D0D0",
-              borderWidth: 2,
-              marginTop: 15,
-            }}
-          />
-
-          <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
-            Today's Deals
-          </Text>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {offers.map((item, index) => (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("Info", {
-                    id: item.id,
-                    title: item.title,
-                    price: item?.price,
-                    carouselImages: item.carouselImages,
-                    color: item?.color,
-                    size: item?.size,
-                    oldPrice: item?.oldPrice,
-                    item: item,
-                  })
-                }
-                style={{
-                  marginVertical: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  style={{ width: 150, height: 150, resizeMode: "contain" }}
-                  source={{ uri: item?.image }}
-                />
-
-                <View
-                  style={{
-                    backgroundColor: "#E31837",
-                    paddingVertical: 5,
-                    width: 130,
+                    margin: 10,
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: 10,
-                    borderRadius: 4,
+                  }}
+                  onPress={() => {
+                    navi.navigate("CategoryScreen",{ category: item.category,product:products});
                   }}
                 >
+                  <Image
+                    style={{ width: 50, height: 50, resizeMode: "contain" }}
+                    source={{ uri: item.image }}
+                  />
+
                   <Text
                     style={{
                       textAlign: "center",
-                      color: "white",
-                      fontSize: 13,
-                      fontWeight: "bold",
+                      fontSize: 12,
+                      fontWeight: "500",
+                      marginTop: 5,
                     }}
                   >
-                    Upto {item?.offer}
+                    {item?.name}
                   </Text>
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-
-          <Text
-            style={{
-              height: 1,
-              borderColor: "#D0D0D0",
-              borderWidth: 2,
-              marginTop: 15,
-            }}
-          />
-
-          <View
-            style={{
-              marginHorizontal: 10,
-              marginTop: 20,
-              width: "45%",
-              marginBottom: open ? 50 : 15,
-            }}
-          >
-            <DropDownPicker
-              style={{
-                borderColor: "#B7B7B7",
-                height: 30,
-                marginBottom: open ? 120 : 15,
-              }}
-              open={open}
-              value={category} //genderValue
-              items={items}
-              setOpen={setOpen}
-              setValue={setCategory}
-              setItems={setItems}
-              placeholder="choose category"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onGenderOpen}
-              // onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {products
-              ?.filter((item) => item.category === category)
-              .map((item, index) => (
-                <ProductItem item={item} key={index} />
+                </Pressable>
               ))}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+            </ScrollView>
+
+            <SliderBox
+              images={images}
+              autoPlay
+              circleLoop
+              dotColor={"#13274F"}
+              inactiveDotColor="#90A4AE"
+              ImageComponentStyle={{ width: "100%" }}
+            />
+
+            <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
+              Trending Deals of the week
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {filteredProducts.map((item, index) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("Info", {
+                      id: item.id,
+                      title: item.title,
+                      price: item?.price,
+                      carouselImages: item.carouselImages,
+                      color: item?.color,
+                      size: item?.size,
+                      oldPrice: item?.oldPrice,
+                      item: item,
+                    })
+                  }
+                  style={{
+                    marginVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    style={{ width: 180, height: 180, resizeMode: "contain" }}
+                    source={{ uri: item?.image }}
+                  />
+                </Pressable>
+              ))}
+            </View>
+
+            <Text
+              style={{
+                height: 1,
+                borderColor: "#D0D0D0",
+                borderWidth: 2,
+                marginTop: 15,
+              }}
+            />
+
+            <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
+              Today's Deals
+            </Text>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {Todaysdeal.map((item, index) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("Info", {
+                      id: item.id,
+                      title: item.title,
+                      price: item?.price,
+                      carouselImages: item.carouselImages,
+                      color: item?.color,
+                      size: item?.size,
+                      oldPrice: item?.oldPrice,
+                      item: item,
+                    })
+                  }
+                  style={{
+                    marginVertical: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    style={{ width: 150, height: 150, resizeMode: "contain" }}
+                    source={{ uri: item?.image }}
+                  />
+
+                  <View
+                    style={{
+                      backgroundColor: "#E31837",
+                      paddingVertical: 5,
+                      width: 130,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: 10,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 13,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Upto {item?.offer}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <Text
+              style={{
+                height: 1,
+                borderColor: "#D0D0D0",
+                borderWidth: 2,
+                marginTop: 15,
+              }}
+            />
+
+            <View
+              style={{
+                marginHorizontal: 10,
+                marginTop: 20,
+                width: "45%",
+                marginBottom: open ? 50 : 15,
+              }}
+            >
+              <DropDownPicker
+                style={{
+                  borderColor: "#B7B7B7",
+                  height: 30,
+                  marginBottom: open ? 120 : 15,
+                }}
+                open={open}
+                value={category} //genderValue
+                items={items}
+                setOpen={setOpen}
+                setValue={setCategory}
+                setItems={setItems}
+                placeholder="choose category"
+                placeholderStyle={styles.placeholderStyles}
+                onOpen={onGenderOpen}
+                // onChangeValue={onChange}
+                zIndex={3000}
+                zIndexInverse={1000}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: 20,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {products
+                ?.filter((item) => item.category === category)
+                .map((item, index) => (
+                  <ProductItem item={item} key={index} />
+                ))}
+            </View>
+          </ScrollView>
+        )}
+      </View>
 
       <BottomModal
         onBackdropPress={() => setModalVisible(!modalVisible)}
@@ -550,7 +513,7 @@ const HomeScreen = () => {
             {/* already added addresses */}
             {addresses?.map((item, index) => (
               <Pressable
-              onPress={() => setSelectedAdress(item)}
+                onPress={() => setSelectedAdress(item)}
                 style={{
                   width: 140,
                   height: 140,
@@ -562,7 +525,8 @@ const HomeScreen = () => {
                   gap: 3,
                   marginRight: 15,
                   marginTop: 10,
-                  backgroundColor:selectedAddress === item ? "#FBCEB1" : "white"
+                  backgroundColor:
+                    selectedAddress === item ? "#FBCEB1" : "white",
                 }}
               >
                 <View
@@ -655,6 +619,7 @@ const HomeScreen = () => {
           </View>
         </ModalContent>
       </BottomModal>
+      
     </>
   );
 };

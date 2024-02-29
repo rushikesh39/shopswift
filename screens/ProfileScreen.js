@@ -26,9 +26,9 @@ const ProfileScreen = () => {
       },
       headerLeft: () => (
         <Image
-          style={{ width: 140, height: 120, resizeMode: "contain" }}
+          style={{ width: 40, height: 40, resizeMode: "contain" }}
           source={{
-            uri: "https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c518.png",
+            uri: "https://www.360webdesigns.com/wp-content/uploads/2016/07/Services_ECommerce_v2-01.png",
           }}
         />
       ),
@@ -53,7 +53,7 @@ const ProfileScreen = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/profile/${userId}`
+          `https://ecommerce-app-server-ivo6.onrender.com/profile/${userId}`
         );
         const { user } = response.data;
         setUser(user);
@@ -76,7 +76,7 @@ const ProfileScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/orders/${userId}`
+          `https://ecommerce-app-server-ivo6.onrender.com/orders/${userId}`
         );
         const orders = response.data.orders;
         setOrders(orders);
