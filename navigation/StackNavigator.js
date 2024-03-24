@@ -18,7 +18,9 @@ import ConfirmationScreen from "../screens/ConfirmationScreen";
 import OrderScreen from "../screens/OrderScreen";
 import SearchResultsScreen from "../screens/SearchResultScreen";
 import VoiceSearch from "../screens/VoiceSearch";
+import VisualSearch from "../screens/CameraScreen";
 import CategoryScreen from "../screens/CategoryScreen";
+import CameraScreen from "../screens/CameraScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -132,6 +134,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="VoiceSearch"
           component={VoiceSearch}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="VisualSearch"
+          component={CameraScreen}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>

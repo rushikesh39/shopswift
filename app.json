@@ -21,6 +21,14 @@
           "microphonePermission": "Allow Voice to Text Tutorial to access the microphone",
           "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow  to access your camera",
+          "microphonePermission": "Allow to access your microphone",
+          "recordAudioAndroid": true
+        }
       ]
     ],
     "android": {

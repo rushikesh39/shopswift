@@ -178,9 +178,9 @@ const HomeScreen = () => {
 
   return (
    <>
-      <View
+      <SafeAreaView
         style={{
-          paddingTop: Platform.OS === "android" ? 40 : 0,
+          // paddingTop: Platform.OS === "android" ? 40 : 0,
           flex: 1,
           backgroundColor: "white",
         }}
@@ -215,39 +215,33 @@ const HomeScreen = () => {
               >
                 <TextInput
                   style={{
-                    width: "75%",
+                    width: "70%",
                     marginLeft: 15,
                     paddingVertical: 0,
                   }}
                   value={search}
                   onChangeText={(text) => setSearch(text)}
+                  onSubmitEditing={handleSearch}
                   placeholder="Search..."
                 />
-                <TouchableOpacity
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                  onPress={handleSearch}
-                >
-                  <AntDesign
-                    style={{ paddingLeft: 10 }}
-                    name="search1"
-                    size={22}
-                    color="black"
-                  />
-                </TouchableOpacity>
-              </Pressable>
-
-              <TouchableOpacity
+                 <TouchableOpacity
                 onPress={() => {
                   navi.navigate("VoiceSearch");
                 }}
               >
                 <Feather name="mic" size={24} color="black" />
               </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  navi.navigate("VisualSearch");
+                }}
+              >
+                <Feather name="camera" size={24} color="black" />
+              </TouchableOpacity>
+              </Pressable>
+
+             
             </View>
 
             <Pressable
@@ -482,7 +476,7 @@ const HomeScreen = () => {
             </View>
           </ScrollView>
         )}
-      </View>
+      </SafeAreaView>
 
       <BottomModal
         onBackdropPress={() => setModalVisible(!modalVisible)}

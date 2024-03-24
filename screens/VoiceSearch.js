@@ -1,21 +1,23 @@
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, Button, View } from "react-native";
-import { useEffect, useState } from "react";
+import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import Voice from "@react-native-voice/voice";
 import { useNavigation } from "@react-navigation/native";
 
 export default function VoiceSearch() {
-  const navi = useNavigation();
-  let [started, setStarted] = useState(false);
-  let [results, setResults] = useState([]);
+  const navigation = useNavigation();
+  const [started, setStarted] = useState(false);
+  const [results, setResults] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     handleSearch();
   }, [search]);
+
   useEffect(() => {
     Voice.onSpeechError = onSpeechError;
     Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
@@ -29,7 +31,6 @@ export default function VoiceSearch() {
 
   const stopSpeechToText = async () => {
     await Voice.stop();
-    setStarted(false);
   };
 
   const onSpeechResults = (result) => {
@@ -40,20 +41,34 @@ export default function VoiceSearch() {
   const onSpeechError = (error) => {
     console.log(error);
   };
+
+  const onSpeechEnd = () => {
+    setStarted(false);
+  };
+
   const handleSearch = () => {
-    if (!search == "") {
-      navi.navigate("SearchResults", { search });
+    if (search !== "") {
+      navigation.navigate("SearchResults", { search });
     }
   };
+
   return (
     <View style={styles.container}>
       {!started ? (
-        <Button title="Start Speech to search" onPress={startSpeechToText} />
-      ) : undefined}
-      {started ? (
-        <Button title="Stop Speech " onPress={stopSpeechToText} />
-      ) : undefined}
-      <Text> SearchResults:{search}</Text>
+        <TouchableOpacity onPress={startSpeechToText}>
+          <Image
+            source={{ uri: "https://cdn-icons-png.flaticon.com/512/8368/8368666.png" }}
+            style={styles.image}
+          />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={stopSpeechToText}>
+          <Image
+            source={{ uri: "https://media.tenor.com/images/7654269dc96ba529876f98fc85181f55/tenor.gif" }}
+            style={styles.image}
+          />
+        </TouchableOpacity>
+      )}
       <StatusBar style="auto" />
     </View>
   );
@@ -65,5 +80,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
   },
 });
